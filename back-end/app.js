@@ -12,6 +12,11 @@ app.use(cors()) // allow cross-origin resource sharing
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
 
+const path = require('path')
+
+// serve static files (e.g., images) from the public folder
+app.use('/public', express.static(path.join(__dirname, 'public')))
+
 // connect to database
 mongoose
   .connect(`${process.env.DB_CONNECTION_STRING}`)
@@ -76,6 +81,21 @@ app.post('/messages/save', async (req, res) => {
       status: 'failed to save the message to the database',
     })
   }
+})
+
+// a simple about JSON endpoint used by the front-end
+app.get('/api/about', (req, res) => {
+  return res.json({
+    title: 'About Angelina Wu',
+    imageUrl: '/public/angelina.jpg',
+    paragraphs: [
+      "Hi my name is Angelina Wu.",
+      " I am from San Jose, California and I go to NYU. I study Computer Science and Economics and am currently a sophomore. I like drawing and painting in my free time, recently getting into pottery and crocheting. Art helps me relax when school gets stressful. It feels different from coding and lets me be more creative.",
+      "I have done a bunch of random partime different jobs and projects that helped me learn how to work with people. I have skills in teamwork and organization. I like being part of clubs and meeting new people. I am in groups like GDG, MUn and SWE in school  and I enjoy being involved. I have a cat and I like spending time with her. I also like working on side projects. I want to travel to places like Japan and Korea in the future. I am always trying new things and learning as I go.",
+      "I like rock climbing and am interested in new experiences.",
+      "Nice to meet you ."
+    ],
+  })
 })
 
 // export the express app we created to make it available to other modules
